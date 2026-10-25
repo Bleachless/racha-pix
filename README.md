@@ -4,7 +4,7 @@
 
 <br />
 
-[![CI](https://github.com/Bleachless/racha/actions/workflows/ci.yml/badge.svg)](https://github.com/Bleachless/racha/actions/workflows/ci.yml)
+[![CI](https://github.com/Bleachless/racha-pix/actions/workflows/ci.yml/badge.svg)](https://github.com/Bleachless/racha-pix/actions/workflows/ci.yml)
 ![Next.js](https://img.shields.io/badge/Next.js_16-1c1a16?style=flat-square&logo=nextdotjs&logoColor=white)
 ![React](https://img.shields.io/badge/React_19-1c1a16?style=flat-square&logo=react&logoColor=61dafb)
 ![TypeScript](https://img.shields.io/badge/TypeScript-1c1a16?style=flat-square&logo=typescript&logoColor=3178c6)
@@ -63,8 +63,8 @@ npm test
 ## 🚀 Rodar localmente
 
 ```bash
-git clone https://github.com/Bleachless/racha.git
-cd racha
+git clone https://github.com/Bleachless/racha-pix.git
+cd racha-pix
 npm install
 npm run dev
 ```

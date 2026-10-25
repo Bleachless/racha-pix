@@ -14,7 +14,7 @@ export function Header() {
   return (
     <header className="mx-auto flex max-w-6xl items-center justify-between px-4 py-5 sm:px-6">
       <Logo />
-      <a href="https://github.com/Bleachless/racha" target="_blank" rel="noreferrer" className="text-sm font-semibold text-ink-2 underline-offset-4 hover:underline">
+      <a href="https://github.com/Bleachless/racha-pix" target="_blank" rel="noreferrer" className="text-sm font-semibold text-ink-2 underline-offset-4 hover:underline">
         código aberto ↗
       </a>
     </header>
