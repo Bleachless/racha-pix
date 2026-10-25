@@ -58,6 +58,7 @@ type State = {
   setTotal: (cents: number) => void;
   setService: (pct: number) => void;
   addItem: (name?: string, cents?: number) => void;
+  addItems: (items: { name: string; cents: number; qty: number }[]) => void;
   updateItem: (id: string, patch: Partial<Item>) => void;
   toggleEater: (itemId: string, personId: string) => void;
   removeItem: (id: string) => void;
@@ -101,6 +102,12 @@ export const useRacha = create<State>()(
       setTotal: (totalCents) => set((s) => bill(s, { totalCents })),
       setService: (service) => set((s) => bill(s, { service })),
       addItem: (name = "", cents = 0) => set((s) => bill(s, { items: [...s.racha.bill.items, { id: uid(), name, cents, qty: 1, people: [] }] })),
+      addItems: (items) =>
+        set((s) =>
+          bill(s, {
+            items: [...s.racha.bill.items, ...items.map((it) => ({ id: uid(), name: it.name, cents: it.cents, qty: Math.max(1, it.qty), people: [] }))],
+          }),
+        ),
       updateItem: (id, patch) => set((s) => bill(s, { items: s.racha.bill.items.map((it) => (it.id === id ? { ...it, ...patch } : it)) })),
       toggleEater: (itemId, personId) =>
         set((s) =>

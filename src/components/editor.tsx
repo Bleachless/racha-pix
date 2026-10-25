@@ -1,11 +1,12 @@
 "use client";
 
-import { Coins, Minus, Plus, Trash2, X } from "lucide-react";
+import { Coins, Minus, Plus, ScanLine, Trash2, X } from "lucide-react";
 import { useState } from "react";
 import { colorOf } from "@/lib/charge";
 import { KEY_LABEL, keyError, type KeyType } from "@/lib/pix";
 import { useRacha } from "@/lib/store";
 import { parseMoney } from "@/lib/split";
+import { NotaScanner } from "./nota-scanner";
 import { Avatar, Card, Segmented } from "./ui";
 
 const PRESETS = [
@@ -91,9 +92,20 @@ function People() {
   );
 }
 
+// Nome da loja da nota vira o nome do rolê ("BAR DO ZÉ LTDA" -> "Bar do Zé").
+const storeTitle = (s: string) =>
+  s
+    .replace(/\b(LTDA|EIRELI|ME|EPP|S\/?A)\b\.?/gi, "")
+    .trim()
+    .toLowerCase()
+    .replace(/(^|\s)(\S)/g, (m, sp, c) => sp + c.toUpperCase())
+    .replace(/\b(De|Da|Do|Das|Dos|E)\b/g, (w) => w.toLowerCase())
+    .slice(0, 60);
+
 function Items() {
-  const { racha, setMode, setTotal, setService, addItem, updateItem, toggleEater, removeItem } = useRacha();
+  const { racha, setMode, setTotal, setService, addItem, addItems, updateItem, toggleEater, removeItem, setTitle } = useRacha();
   const { bill } = racha;
+  const [scanning, setScanning] = useState(false);
   return (
     <Card n={2} title="O que foi pedido?" hint="Por item, cada um paga só o que consumiu. Ou divide tudo igual.">
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -117,10 +129,31 @@ function Items() {
         </label>
       </div>
 
+      <button
+        type="button"
+        onClick={() => setScanning(true)}
+        className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-ink/50 bg-paper px-4 py-3 font-semibold transition hover:border-ink hover:bg-lime"
+      >
+        <ScanLine className="h-5 w-5" /> Ler o QR Code da nota fiscal
+      </button>
+      {scanning && (
+        <NotaScanner
+          onClose={() => setScanning(false)}
+          onAdd={(items, nota) => {
+            if (bill.mode === "igual") setTotal(nota.paidCents);
+            else addItems(items);
+            // A nota já traz o valor cobrado: o serviço volta a zero para não contar duas vezes.
+            setService(0);
+            if (!racha.title.trim() && nota.store) setTitle(storeTitle(nota.store));
+            setScanning(false);
+          }}
+        />
+      )}
+
       {bill.mode === "igual" ? (
         <div className="mt-5">
           <p className="mb-2 text-sm font-semibold">Valor da conta (sem o serviço)</p>
-          <Money key={`t-${racha.id}`} cents={bill.totalCents} onChange={setTotal} label="Valor da conta" className="max-w-56" />
+          <Money key={`t-${racha.id}-${bill.totalCents ? "v" : "z"}`} cents={bill.totalCents} onChange={setTotal} label="Valor da conta" className="max-w-56" />
         </div>
       ) : (
         <>

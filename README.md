@@ -11,7 +11,7 @@
 ![React](https://img.shields.io/badge/React_19-1c1a16?style=flat-square&logo=react&logoColor=61dafb)
 ![TypeScript](https://img.shields.io/badge/TypeScript-1c1a16?style=flat-square&logo=typescript&logoColor=3178c6)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_4-1c1a16?style=flat-square&logo=tailwindcss&logoColor=38bdf8)
-![Vitest](https://img.shields.io/badge/11_testes-1c1a16?style=flat-square&logo=vitest&logoColor=d8f347)
+![Vitest](https://img.shields.io/badge/20_testes-1c1a16?style=flat-square&logo=vitest&logoColor=d8f347)
 
 **Racha a conta. Cada um paga o seu Pix.**
 <br />
@@ -37,12 +37,29 @@ Cada pessoa abre, acha o nome dela e paga o próprio QR Code. **Sem cadastro, se
 
 ## ✨ O que ele faz
 
+- **Lê a nota fiscal.** Aponta a câmera pro QR Code do cupom (ou manda a foto, ou cola o link) e os itens já entram na comanda, com o desconto da nota repartido.
 - **Divide por item ou igual.** Por item, cada um marca o que consumiu: a cerveja fica só com quem bebeu.
 - **Serviço de 10%** (ou 12, 13, 15) proporcional ao que cada um pediu.
 - **Fecha no centavo.** A soma das partes é sempre igual ao total, sem centavo sobrando ou faltando.
 - **Quem pagou a conta recebe dos outros.** O Pix de cada pessoa já sai com o valor certo.
 - **Um link para o grupo.** Pelo WhatsApp ou copiando: a pessoa abre, escolhe o nome e paga.
 - **Marca quem já pagou.** Quando todo mundo paga, a comanda ganha o carimbo de *quitado*.
+
+## 🧾 Lendo a nota fiscal
+
+<img src="docs/nota.png" alt="Itens lidos do QR Code da nota fiscal, prontos para entrar na comanda" width="300" align="right" />
+
+O QR Code do cupom (NFC-e) é um link para a consulta pública da Sefaz do estado. O navegador não consegue abrir essa página direto (CORS), então uma rota do próprio Racha (`/api/nfce`) busca a consulta e lê os itens:
+
+- só aceita links das Fazendas estaduais (`.gov.br`), para não virar um proxy aberto;
+- respeita a codificação da página (muitas Sefaz usam ISO-8859-1);
+- roda em São Paulo (`vercel.json`), porque algumas Sefaz recusam acesso de fora do Brasil;
+- item vendido por peso (0,535 kg) vira um item só, com o total;
+- desconto da nota é repartido entre os itens, e a comanda fecha no valor pago.
+
+A leitura usa o layout padrão de consulta que a maioria das Sefaz adota. Se o estado pedir captcha ou usar outro formato, o app avisa e você lança os itens na mão.
+
+<br clear="right" />
 
 ## 🧠 Como funciona por dentro
 
@@ -60,7 +77,7 @@ Cada pessoa abre, acha o nome dela e paga o próprio QR Code. **Sem cadastro, se
 npm test
 ```
 
-11 testes cobrem o CRC e os campos do código Pix, a detecção e a validação das chaves, a divisão em centavos (igual, por item, com serviço), a leitura de valores digitados de vários jeitos e o link indo e voltando sem perder nada.
+20 testes cobrem o CRC e os campos do código Pix, a detecção e a validação das chaves, a divisão em centavos (igual, por item, com serviço), a leitura de valores digitados de vários jeitos, o link indo e voltando sem perder nada e a nota fiscal: a lista de Sefaz aceitas, a leitura da página de consulta (itens, kg, desconto, loja), a conversão em itens e a rota com a Sefaz simulada (ISO-8859-1, fora do ar, captcha e chave inválida).
 
 ## 🚀 Rodar localmente
 
@@ -79,20 +96,21 @@ Abra http://localhost:3000 e clique em **Ver um exemplo pronto**.
 src/
 ├── app/
 │   ├── page.tsx         # editor + comanda
-│   └── r/page.tsx       # página do link mandado no grupo
-├── components/          # editor, comanda, janela do Pix
+│   ├── r/page.tsx       # página do link mandado no grupo
+│   └── api/nfce/        # busca a nota fiscal na Sefaz
+├── components/          # editor, comanda, janela do Pix, leitor da nota
 └── lib/
     ├── pix.ts           # BR Code, CRC16 e chaves
     ├── split.ts         # divisão em centavos
     ├── share.ts         # o racha compactado no link
     ├── charge.ts        # Pix de cada um e texto do WhatsApp
+    ├── nfce.ts          # NFC-e: link, leitura da consulta e itens
     ├── store.ts         # estado com zustand, salvo no navegador
     └── racha.test.ts    # testes
 ```
 
 ## 🛣️ Próximos passos
 
-- [ ] Ler a nota fiscal (QR Code da NFC-e) e já trazer os itens
 - [ ] Vários pagadores no mesmo racha
 - [ ] Histórico dos rachas anteriores
 
