@@ -1,0 +1,76 @@
+@import "tailwindcss";
+
+/* Comanda de boteco: papel, tinta de caneta e uma etiqueta laranja. */
+@theme inline {
+  --color-paper: #f3ede1;
+  --color-card: #fffdf7;
+  --color-ink: #1c1a16;
+  --color-ink-2: #4a463e;
+  --color-muted: #8b8579;
+  --color-line: #ddd4c2;
+  --color-tomato: #ff5a2c;
+  --color-tomato-dark: #d9431a;
+  --color-lime: #d8f347;
+  --color-mint: #138a5a;
+  --color-mint-soft: #dff3e8;
+
+  --font-sans: var(--font-bricolage), system-ui, sans-serif;
+  --font-mono: var(--font-jet), ui-monospace, monospace;
+}
+
+html {
+  color-scheme: light;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+  /* Toalha de mesa quadriculada, bem apagada. */
+  background-image:
+    linear-gradient(rgba(28, 26, 22, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(28, 26, 22, 0.035) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+::selection {
+  background: var(--color-lime);
+  color: var(--color-ink);
+}
+
+/* Borda picotada embaixo da comanda. */
+.zigzag {
+  --z: 9px;
+  mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% / calc(2 * var(--z)) 100%;
+  padding-bottom: calc(var(--z) + 1.25rem);
+}
+
+.receipt-shadow {
+  filter: drop-shadow(0 18px 28px rgba(60, 45, 20, 0.16)) drop-shadow(0 2px 2px rgba(60, 45, 20, 0.08));
+}
+
+.num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+@keyframes pop {
+  0% { transform: scale(0.92); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+@keyframes rise {
+  0% { transform: translateY(14px); opacity: 0; }
+  100% { transform: none; opacity: 1; }
+}
+@keyframes stamp {
+  0% { transform: scale(1.8) rotate(-14deg); opacity: 0; }
+  60% { transform: scale(0.95) rotate(-8deg); opacity: 1; }
+  100% { transform: scale(1) rotate(-8deg); opacity: 1; }
+}
+.anim-pop { animation: pop 0.22s ease-out both; }
+.anim-rise { animation: rise 0.35s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+.anim-stamp { animation: stamp 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+
+@media (prefers-reduced-motion: reduce) {
+  .anim-pop, .anim-rise, .anim-stamp { animation: none; }
+}
