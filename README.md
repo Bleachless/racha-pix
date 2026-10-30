@@ -4,7 +4,7 @@
 
 <br />
 
-[![Abrir o app](https://img.shields.io/badge/%E2%96%B6_Abrir_o_app-racha--pix--phi.vercel.app-ff5a2c?style=for-the-badge)](https://racha-pix-phi.vercel.app)
+[![Abrir o app](https://img.shields.io/badge/%E2%96%B6_Abrir_o_app-racha.joaovaz.dev-ff5a2c?style=for-the-badge)](https://racha.joaovaz.dev)
 
 [![CI](https://github.com/Bleachless/racha-pix/actions/workflows/ci.yml/badge.svg)](https://github.com/Bleachless/racha-pix/actions/workflows/ci.yml)
 ![Next.js](https://img.shields.io/badge/Next.js_16-1c1a16?style=flat-square&logo=nextdotjs&logoColor=white)

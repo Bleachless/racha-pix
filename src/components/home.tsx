@@ -30,7 +30,7 @@ export function Footer() {
       </p>
       <p className="mt-2">
         Feito por{" "}
-        <a href="https://portifolio-joao-vaz.vercel.app" className="font-semibold text-ink underline-offset-4 hover:underline">
+        <a href="https://joaovaz.dev" className="font-semibold text-ink underline-offset-4 hover:underline">
           João Vaz
         </a>
         .
